@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo 日本語ファイルの文字・改行コードをUTF-8に変換し,上書きします.
+read -p "file: " import_file
+
+nkf -w --overwrite $import_file
+nkf -Lu --overwrite $import_file

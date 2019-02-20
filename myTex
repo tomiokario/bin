@@ -1,0 +1,54 @@
+#!/bin/bash
+
+
+# 実行場所のディレクトリを取得
+THIS_DIR=$(cd $(dirname $0); pwd)
+
+cd $THIS_DIR
+
+if [ -z "$1" ]; then
+    echo "texファイルをドラッグ&ドロップ"
+    read -p "filepath: " filepath
+else
+    filepath=$1
+fi
+
+
+base=`basename ${filepath}`
+dir=`dirname ${filepath}`
+filename=${base%.*}
+expanded=${base##*.}
+
+if [ ${expanded} = "tex" ];then
+    ad=`pwd`
+    cd; cd ${dir}
+    
+    while :
+    do
+	    echo "コンパイルを開始します";echo
+	    platex ${filename}.tex;echo;echo
+
+	    #dvips ${filename}.dvi;echo;echo
+	    #ps2pdf ${filename}.ps;
+        dvipdfmx ${filename}
+        
+	    echo "コンパイルが完了しました"
+	    open ${filename}.pdf
+	
+	    read -p "終了する場合はqを入力してください" res
+	    if [ $res = q ];then
+            break
+        fi
+    done
+
+    mkdir logfile
+    mv ${filename}.aux ./logfile/${filename}.aux
+    mv ${filename}.dvi ./logfile/${filename}.dvi
+    mv ${filename}.ps  ./logfile/${filename}.ps
+    mv ${filename}.log ./logfile/${filename}.log
+
+else
+    echo "error: texファイルではありません"
+fi
+
+

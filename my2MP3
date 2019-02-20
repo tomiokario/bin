@@ -1,0 +1,9 @@
+#!/bin/bash
+
+extend=mp3
+
+echo ${extend}に変換します.
+read -p "input file path: " input_file
+output_name=${input_file%.*}
+
+ffmpeg -y -i $input_file -f mp3 ${output_name}.${extend}
